@@ -1,77 +1,81 @@
-//function to generate password
-function generatePassword(){
+// Assignment Code
+var generateBtn = document.querySelector("#generate");
 
-  //keep values between 8 and 120
+
+//Variable for all characters that will be used to generate a password.
+var num =['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+var upperCase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+var lowerCase = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+var specialChar = ['@', '%', '+', '/', "'", '!', '#', '$', '^', '?', ':', ',', ')', '(', '}', '{', ']', '[', '~', '-', '_', '.'];
+
+
+// This function prompt user for possible options with at least one type of requirement.
+function getOptionForPassword(){
   var isValid = false;
-
-//set prompt to only accept values between 8 and 120
   do {
-    var userLength = prompt("*Enter a number between 8 and 120");
-    userLength = parseInt(userLength);
-//length of pw
-    if ((userLength < 8) || (userLength > 120) || (isNaN(userLength))){
-      alert("Please enter a valid number between 8 and 120.");
-    } else{
-      isValid = true;
-    }
+  var length = prompt ("How many characters would you like your password to have from 8 and 128?");
+  var hasSpecialChar = confirm ("Would you like special character in your password?")
+  var hasnumber = confirm ("Do you want a number in your Password?")
+  var hasUpperCase = confirm ("Do you want uppercase letters in your password?")
+  var hasLowerCase = confirm ("Do you want lowercase letters in your password?")
+  var PasswordResponses = {
+    length:length,
+    hasnumber:hasnumber,
+    hasUpperCase:hasUpperCase,
+    haslowerCase:haslowerCase,
+    hasSpecialChar:hasSpecialChar,  
   }
-  while (!isValid);
-// array of the characters
-  var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "K", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  var numbers = ["1","2","3","4","5","6","7","8","9","0"];
-  var specCharacters = ["!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",",
-    "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_",
-    "`", "{", "|", "}", "~"];
+  if((length < 8 ) || (length > 128))
+  alert("Can you please pick a number that is between 8 and 128?");
+  else if((!hasSpecialChar) && (!hasnumber) && (!hasUpperCase) && (!haslowerCase))
+  alert("Please choose one character type!");
+  else
+  isValid = true;
 
-//value of is valid to false measure to make user choose one character type
-    isValid = false;
-    
+  }while(!isValid)
+  return PasswordResponses;
+}
 
-    
+// Function combines all results from user and generate a desired password
+function generatePassword(){
+  var useroption = getOptionForPassword();
+  var potentialPassword = [];
+  var Password = "";
 
-    do {
-        //confirm for the 
-      var alphaLowConfirm = confirm("Do you want lowercase letters in your password?");
-      var alphaUpperConfirm = confirm("Do you want uppercase letters n your password?");
-      var numbersConfirm = confirm("Do you want numbers in your password?");
-      var specCharConfirm = confirm("Do you want special characters in your password?");
+  if (useroption.hasnumber) {
+    for (var i of num)
+    potentialPassword.push(i);
+  }
+  if (useroption.hasUpperCase) {
+    for (var i of upperCase)
+    potentialPassword.push(i);
+  }
+  if (useroption.haslowerCase) {
+    for (var i of lowerCase)
+    potentialPassword.push(i);
+  }
+  if (useroption.hasSpecialChar) {
+    for (var i of specialChar)
+    potentialPassword.push(i);
+  }
+
+  console.log(potentialPassword);
 
 
-        if ((alphaLowConfirm == false) && (alphaUpperConfirm == false) && (numbersConfirm == false) && (specCharConfirm == false)) {
-          alert ("Please select at least one type of character to use.");
-        }else {
-          isValid = true;
-        }
-    }while (!isValid);
+for(var i = 0; i < useroption.length; i++){
+  Password += potentialPassword[Math.floor(Math.random()*potentialPassword.length)];
+}
+console.log(Password);
 
-    var passArray = [];
+return Password;
+}
 
-    if(alphaLowConfirm == true) {
-      for (var i of alphabet)
-          passArray.push(i);
-    }
-    if (alphaUpperConfirm == true) {
-      for (var i of alphabet) {
-        passArray.push(i,toUppercase());
-      }
-    }
-      if (numbersConfirm == true) {
-        for (var i of numbers)
-        passArray.push(i);
-      }
-      if (specCharConfirm == true) {
-        for (var i of specCharacters)
-        passArray.push(i);
-      }
+function writePassword() {
+  var password = generatePassword();
+  var passwordText = document.querySelector("#password");
 
-      var returnPass = "";
+  passwordText.value = password;
+}
 
-      for (var i = 0; i < userLength; i++) {
-        returnPass += passArray[Math.floor(Math.random() * passArray.length)];
-      } 
-
-        //Creat return value that is generate password()
-      return returnPass;
-    }
-
+// Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
